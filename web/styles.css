@@ -195,17 +195,20 @@ p {
 }
 
 .warehouse-frame {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
   overflow: hidden;
   border: 1px solid #454b57;
   border-radius: 8px;
   background: #0f1115;
-  min-height: 330px;
 }
 
 .warehouse-svg {
   display: block;
-  width: 100%;
-  aspect-ratio: auto;
+  width: auto;
+  height: auto;
+  max-width: none;
 }
 
 .warehouse-svg.aiming {
