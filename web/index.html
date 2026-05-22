@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>拍卖之王</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar">
+        <div>
+          <h1>拍卖之王</h1>
+          <p id="dayLabel">第 1 天 · 仓库拍卖</p>
+        </div>
+        <div class="money-card">
+          <span id="goalLabel">现金</span>
+          <strong id="moneyLabel">$100,000</strong>
+        </div>
+      </section>
+
+      <section id="venueScreen" class="venue-screen">
+        <div class="panel-header">
+          <div>
+            <h2>选择今日拍卖场</h2>
+            <p id="venueScreenHint">查看入场门槛，门票会在仓库生成后按本场期望均价的 5% 收取。</p>
+          </div>
+          <button id="startVenueButton" type="button">进入拍卖</button>
+        </div>
+        <div id="startVenueList" class="start-venue-list"></div>
+      </section>
+
+      <section id="familyScreen" class="family-screen hidden">
+        <div class="panel-header">
+          <div>
+            <h2>今晚的家</h2>
+            <p id="familyScreenHint">拍卖结束后，生活的账单还在桌上。</p>
+          </div>
+          <div class="debt-pill">
+            <span id="debtDaysLabel">还款日</span>
+            <strong id="debtAmountLabel">$90,000</strong>
+          </div>
+        </div>
+        <div class="family-layout">
+          <section class="section-card">
+            <h3>家里人</h3>
+            <div id="familyMemberList" class="family-member-list"></div>
+          </section>
+          <section class="section-card">
+            <h3>今日维持费用</h3>
+            <div id="familyExpenseList" class="family-expense-list"></div>
+            <div class="family-total">
+              <span>合计</span>
+              <strong id="familyBillTotal">$0</strong>
+            </div>
+            <p id="familyRiskHint" class="hint"></p>
+            <div class="family-actions">
+              <button id="payFamilyButton" type="button">支付费用</button>
+              <button id="skipFamilyButton" class="danger-button" type="button">暂不支付</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="gameOverScreen" class="game-over-screen hidden">
+        <div class="panel-header">
+          <div>
+            <h2 id="gameOverTitle">挑战结束</h2>
+            <p id="gameOverSummary"></p>
+          </div>
+          <button id="restartGameButton" type="button">重新开始</button>
+        </div>
+        <div class="game-over-stats">
+          <div><span>当前现金</span><strong id="gameOverMoney">$0</strong></div>
+          <div><span>还款金额</span><strong id="gameOverDebt">$0</strong></div>
+          <div><span>拖欠天数</span><strong id="gameOverUnpaid">0</strong></div>
+        </div>
+      </section>
+
+      <section id="gameLayout" class="game-layout hidden">
+        <section class="warehouse-panel">
+          <div class="panel-header">
+            <div>
+              <h2 id="warehouseName">仓库</h2>
+              <p id="warehouseProfile">等待拍卖开始...</p>
+            </div>
+            <button id="newAuctionButton" class="ghost-button" type="button">新仓库</button>
+          </div>
+          <div id="warehouseSvgMount" class="warehouse-frame" aria-label="仓库格子"></div>
+          <div class="tool-row">
+            <button id="toolFlashlight" type="button">手电筒 <span id="flashlightCount">免费 3</span></button>
+            <button id="toolWideLamp" type="button">广角灯 <span id="wideLampCount">付费</span></button>
+            <button id="toolMagnifier" type="button">放大镜 <span id="magnifierCount">付费</span></button>
+          </div>
+          <p id="toolHint" class="hint">选择一个道具，然后点击仓库。</p>
+          <div class="section-card log-card warehouse-log-card">
+            <h3>拍卖记录</h3>
+            <ol id="auctionLog"></ol>
+          </div>
+          <div id="settlementBanner" class="settlement-banner hidden">
+            <div>
+              <strong id="settlementBannerTitle">拍卖结果</strong>
+              <p id="settlementBannerSummary"></p>
+            </div>
+            <button id="nextAuctionBannerButton" type="button">回家结账</button>
+          </div>
+        </section>
+
+        <aside class="auction-panel">
+          <div class="current-bid">
+            <div class="auction-clock-face">
+              <div class="clock-ornament top-left"></div>
+              <div class="clock-ornament top-right"></div>
+              <div class="clock-ornament bottom-left"></div>
+              <div class="clock-ornament bottom-right"></div>
+              <span id="clockMaxLabel" class="clock-price-label clock-price-max">$0</span>
+              <span id="clockMidLabel" class="clock-price-label clock-price-mid">$0</span>
+              <span id="clockFloorLabel" class="clock-price-label clock-price-floor">$0</span>
+              <div class="clock-dial">
+                <div class="clock-needle" id="clockNeedle"></div>
+                <div class="clock-glass"></div>
+                <div class="clock-center">
+                  <span id="bidLabel">第 1 / 5 轮</span>
+                  <strong id="currentBidLabel">$0</strong>
+                  <button id="stopClockButton" class="stop-clock-button" type="button">按停计价</button>
+                </div>
+              </div>
+            </div>
+            <p id="highestBidderLabel">暂无出价</p>
+          </div>
+
+          <div class="actions">
+            <button id="passButton" class="danger-button" type="button">放弃本仓</button>
+          </div>
+
+          <div class="section-card round-card">
+            <h3>轮次结果</h3>
+            <div id="roundResults" class="round-results"></div>
+          </div>
+
+          <div class="section-card">
+            <h3>AI 买家</h3>
+            <div id="buyerList" class="buyer-list"></div>
+          </div>
+
+          <div id="settlementInline" class="section-card settlement-inline hidden">
+            <h3 id="settlementInlineTitle">拍卖结果</h3>
+            <div id="settlementInlineBody"></div>
+            <button id="nextAuctionInlineButton" type="button">回家结账</button>
+          </div>
+        </aside>
+
+        <aside class="codex-panel">
+          <div class="panel-header compact">
+            <div>
+              <h2>图鉴</h2>
+              <p id="codexSummary">已知 0 件物品</p>
+            </div>
+            <button id="resetButton" class="ghost-button" type="button">重置</button>
+          </div>
+          <div id="codexList" class="codex-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <dialog id="settlementDialog">
+      <div class="dialog-header">
+        <h2 id="settlementTitle">拍卖结果</h2>
+        <button id="closeSettlementButton" class="icon-button" type="button" aria-label="关闭">×</button>
+      </div>
+      <div id="settlementBody"></div>
+      <button id="nextAuctionButton" type="button">回家结账</button>
+    </dialog>
+
+    <div id="tutorialOverlay" class="tutorial-overlay hidden" aria-live="polite">
+      <div id="tutorialSpotlight" class="tutorial-spotlight"></div>
+      <div id="tutorialCard" class="tutorial-card">
+        <span id="tutorialStepLabel"></span>
+        <h3 id="tutorialTitle"></h3>
+        <p id="tutorialBody"></p>
+        <div class="tutorial-actions">
+          <button id="tutorialSkipButton" class="ghost-button" type="button">跳过</button>
+          <button id="tutorialNextButton" type="button">下一步</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./src/data/items.js"></script>
+    <script src="./src/data/warehouses.js"></script>
+    <script src="./src/systems/generator.js"></script>
+    <script src="./src/systems/codex.js"></script>
+    <script src="./src/systems/auction.js"></script>
+    <script src="./src/ui/render.js"></script>
+    <script src="./src/main.js"></script>
+  </body>
+</html>
